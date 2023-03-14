@@ -1,4 +1,5 @@
-Web Scraping the Price of Electronic Gadgets
+#Web Scraping the Price of Electronic Gadgets
+
 Web scraping is a technique used to extract data from websites. It is commonly used in data analysis and research to gather information from various sources. In this readme.md, we will cover how to web scrape the price from a website.
 
 Prerequisites
