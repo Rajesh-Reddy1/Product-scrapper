@@ -3,8 +3,7 @@ Web scraping is a technique used to extract data from websites. It is commonly u
 
 Prerequisites
 To web scrape the price from a website, you will need:
-  `A programming language such as Python or R
-  `An HTML parser such as Beautiful Soup or lxml
+  `A programming language such as Python
   `Basic knowledge of HTML and CSS
   
 Steps to Web Scrape the Price
