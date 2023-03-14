@@ -1,0 +1,9 @@
+
+
+#packages required for program execution
+
+
+selenium
+urllib3
+pandas
+numpy
