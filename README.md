@@ -7,6 +7,12 @@ To web scrape the price from a website, you will need:
   `A programming language such as Python
   `Basic knowledge of HTML and CSS
   
+ How to Run
+ - go to Product-Crawler folder
+ - run the main.py
+ - enter the product name in terminal
+ - it gives html webpage with results
+  
 Steps to Web Scrape the Price
 Here are the general steps to web scrape the price from a website:
   1. Identify the website you want to scrape the price from.
