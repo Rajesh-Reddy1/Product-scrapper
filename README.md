@@ -8,7 +8,7 @@ To web scrape the price from a website, you will need:
   `Basic knowledge of HTML and CSS
   
  How to Run
- - go to Product-Crawler folder
+ - go to Product-scrapper/src folder
  - run the main.py
  - enter the product name in terminal
  - it gives html webpage with results
