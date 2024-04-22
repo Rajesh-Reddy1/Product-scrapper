@@ -1,0 +1,62 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
+
+html,
+body {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+  line-height: 1.42em;
+  color: #a7a1ae;
+  background-color: #1f2739;
+}
+
+h1 {
+  font-size: 3em;
+  font-weight: 300;
+  line-height: 1em;
+  text-align: center;
+  color: #4dc3fa;
+}
+
+#table-container {
+  display: flex;
+  justify-content: center;
+}
+
+/* Add spacing between table cells */
+table {
+  border-spacing: 5px;
+  width: 80%; /* Adjust spacing as needed */
+}
+
+/* Increase cell padding */
+.container td,
+.container th {
+  padding: 10px;
+}
+
+/* Adjust line height (optional) */
+.container td,
+.container th {
+  line-height: 1.6em; /* Adjust as needed */
+}
+
+/* Left align header text */
+th {
+  text-align: left;
+}
+
+/* Style for Visit Link */
+td a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+td a:hover {
+  text-decoration: underline;
+}
+
+table {
+  margin-left: auto;
+  margin-right: auto;
+  border-spacing: 8px;
+}
