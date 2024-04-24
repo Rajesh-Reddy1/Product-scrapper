@@ -3,6 +3,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
 from collections import OrderedDict
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
+
 
 import urllib
 import pandas as pd
@@ -24,16 +30,21 @@ class Scraper:
     
     def __init__(self):
         chrome_options = Options()
-        chrome_options.add_argument("--headless")  # Run Chrome in headless mode
-        self.driver = webdriver.Chrome(options=chrome_options)
+        chrome_options.add_argument("--headless")
+        self.driver = webdriver.Chrome(options=chrome_options,service=ChromeService(ChromeDriverManager().install()))
+        # self.driver = webdriver.Chrome(options=chrome_options)
         self.query = None
-        self.url = None
+        self.url = ""
 
 
     
     def set_query(self, query):
+        if not isinstance(query, str):
+            query = str(query)  # Ensure query is a string
+        print(f"Query before encoding: {query}")  # Debug print statement
         self.query = urllib.parse.quote_plus(query)
         self.url = "https://www.google.co.uk/search?q=" + self.query
+
     
     def get_site_elements(self, class_name):
         return self.driver.find_elements(by=By.ID, value=class_name)
@@ -46,7 +57,9 @@ class Scraper:
     
     def scrape(self):
         self.driver.get(self.url)
-        self.driver.implicitly_wait(1)
+        print(f"URL: {self.url}, Type: {type(self.url)}")  # Debug print statement
+        self.driver.implicitly_wait(1)  # Increased wait time
+
 
         try:
             site = self.get_website_elements(Dict['M_Site_Name_class'])
@@ -66,8 +79,7 @@ class Scraper:
         linki = list(OrderedDict.fromkeys(link))
         b=linki
 
-        table = pd.DataFrame({'Site_Name': site_name, 'Product': Product_info, 'Price': Price, 'Site_Link':b })
-        result1 = table.drop_duplicates(subset=['Product','Site_Name','Price'])
+        
         
         site_info_elements = self.get_website_elements(Dict['L_Site_Name_class'])
         site_info_list = [element.get_attribute("innerHTML") for element in site_info_elements]
@@ -90,7 +102,7 @@ class Scraper:
         for i in range(0, len(product_name_list)):
             id_name = "vplap" + str(i)
             site_elements = self.get_site_elements(id_name)
-            links = [element.get_attribute("href") for element in site_elements]
+            links = [i.get_attribute("href") for i in website if i.get_attribute("href") is not None]
 
         # Check if links is empty before accessing index 0
             if links:
@@ -100,33 +112,37 @@ class Scraper:
             'Site_Name': site_name,
             'Product': Product_info,
             'Price': Price,
-            'Site_Link': b  
+            'Site_Link': b      
         })
 
-        # Create a new column with HTML anchor tags for clickable links
-        table['Link'] = table['Site_Link'].apply(lambda url: f'<a href="{url}">Visit Link</a>')
+# Create the 'Link' column with HTML tags
+        table['Link'] = table['Site_Link'].apply(lambda url: f'<a href="{url or "#"}">Visit Link</a>')
 
         # Drop the original 'Site_Link' column
         table = table.drop('Site_Link', axis=1)
-        
-        result = table.drop_duplicates(subset=['Site_Name','Product','Price'])
-        result2 = pd.concat([result, result1], ignore_index=True)
-        res=result2.sort_values(by=['Price'],ignore_index=True)
-        res.index = np.arange(1, len(result2) + 1)
-        res = f'''
-        <head>
-    <title>Product Search</title>
-    <link rel="stylesheet" href="./style.css" />
-    </head>
-    <body>
-    <h1>Product Search Results</h1>
 
-    <div id="table-container"></div>
-    {table.to_html(escape=False)} 
-    </body>
-'''
+        # Drop duplicates based on 'Site_Name', 'Product', and 'Price'
+        result = table.drop_duplicates(subset=['Site_Name', 'Product','Price'])
+
+        # Concatenate the results
+
+        # Sort the results by 'Price'
+        res = result.sort_values(by=['Price'], ignore_index=True)
+
+        
+        # Create the HTML string with the DataFrame's HTML representation
+        html_string = f'''
+        <head>
+        <title>Product Search</title>
+        <link rel="stylesheet" href="./style.css" />
+        </head>
+        <body>
+        <h1>Product Search Results</h1>
+        {res.to_html(escape=False)} 
+        </body>
+        '''
+        return html_string
     
-        return res
-    
+
     def close(self):
         self.driver.quit()
