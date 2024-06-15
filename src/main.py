@@ -1,4 +1,3 @@
-from webpage import webpage
 from Extracter import Scraper
 from flask import Flask, render_template, request
 
